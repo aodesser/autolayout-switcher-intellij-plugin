@@ -10,7 +10,7 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <postStartupActivity implementation="com.aodesser.intellijlayoutplugin.runtime.LayoutAutoSwitchStartupActivity"/>
+        <backgroundPostStartupActivity implementation="com.aodesser.intellijlayoutplugin.runtime.LayoutAutoSwitchStartupActivity"/>
         <applicationConfigurable
                 id="com.aodesser.intellijlayoutplugin.settings"
                 displayName="AutoLayout Switcher"
