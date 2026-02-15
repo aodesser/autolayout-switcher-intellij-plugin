@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Compute release version
+        id: version
+        run: |
+          VERSION="0.1.${GITHUB_RUN_NUMBER}"
+          TAG="v${VERSION}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Build plugin zip
+        run: ./gradlew buildPlugin -PpluginVersion=${{ steps.version.outputs.version }} --no-daemon
+
+      - name: Locate distribution zip
+        id: artifact
+        run: |
+          FILE=$(ls build/distributions/*.zip | head -n 1)
+          echo "file=${FILE}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: AutoLayout Switcher ${{ steps.version.outputs.tag }}
+          generate_release_notes: true
+          files: ${{ steps.artifact.outputs.file }}
