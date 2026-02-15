@@ -89,12 +89,18 @@ class LayoutAutoSwitchConfigurable : BoundConfigurable("AutoLayout Switcher") {
 
   override fun apply() {
     val state = service.state
+    val oldPolling = state.pollingSeconds
     state.enabled = enabledCheckBox.isSelected
     state.showNotifications = notificationsCheckBox.isSelected
     state.pollingSeconds = (pollingSpinner.value as Int).coerceIn(2, 60)
     state.laptopActionId = selectedActionId(laptopCombo)
     state.singleExternalActionId = selectedActionId(singleExternalCombo)
     state.multiExternalActionId = selectedActionId(multiExternalCombo)
+
+    // Restart the monitor so new polling interval takes effect immediately.
+    if (oldPolling != state.pollingSeconds) {
+      com.aodesser.intellijlayoutplugin.runtime.LayoutMonitorService.getInstance().start()
+    }
   }
 
   private fun selectedActionId(comboBox: JComboBox<LayoutOption>): String {

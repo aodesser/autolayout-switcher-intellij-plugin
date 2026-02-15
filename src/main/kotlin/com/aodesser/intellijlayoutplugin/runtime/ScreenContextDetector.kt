@@ -46,7 +46,10 @@ object ScreenContextDetector {
     val id = device.getIDstring().lowercase()
     if ("built-in" in id || "internal" in id || "retina" in id || "color lcd" in id) return true
 
+    // Only use resolution as a hint for very small screens (typical laptop panels).
+    // 2560x1600 is the largest common laptop panel (16" MacBook Pro).
+    // Avoiding false positives on QHD (2560x1440) external monitors.
     val mode = device.displayMode
-    return mode.width <= 2560 && mode.height <= 1800
+    return mode.width <= 2048 && mode.height <= 1536
   }
 }

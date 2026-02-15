@@ -88,15 +88,16 @@ class ScreenContextDetectorTest {
   }
 
   @Test
-  fun `2560x1600 display without keywords is treated as laptop`() {
-    val device = mockDevice(idString = "Unknown Display", width = 2560, height = 1600)
-    assertTrue("2560x1600 is within laptop threshold", isLaptop(device))
+  fun `2048x1536 display without keywords is treated as laptop (boundary)`() {
+    val device = mockDevice(idString = "Unknown Display", width = 2048, height = 1536)
+    assertTrue("2048x1536 is exactly at the boundary and should be laptop", isLaptop(device))
   }
 
   @Test
-  fun `2560x1800 display without keywords is treated as laptop (boundary)`() {
-    val device = mockDevice(idString = "Unknown Display", width = 2560, height = 1800)
-    assertTrue("2560x1800 is exactly at the boundary and should be laptop", isLaptop(device))
+  fun `2560x1600 display without keywords is NOT laptop`() {
+    // MacBook-class resolution but no keyword — external QHD monitors hit this range
+    val device = mockDevice(idString = "Unknown Display", width = 2560, height = 1600)
+    assertFalse("2560x1600 exceeds the lowered threshold", isLaptop(device))
   }
 
   @Test
@@ -112,17 +113,17 @@ class ScreenContextDetectorTest {
   }
 
   @Test
-  fun `2561 width display without keywords is NOT laptop`() {
-    // Just over the 2560 boundary
-    val device = mockDevice(idString = "Generic", width = 2561, height = 1440)
-    assertFalse("Width 2561 exceeds 2560 threshold", isLaptop(device))
+  fun `2049 width display without keywords is NOT laptop`() {
+    // Just over the 2048 boundary
+    val device = mockDevice(idString = "Generic", width = 2049, height = 1440)
+    assertFalse("Width 2049 exceeds 2048 threshold", isLaptop(device))
   }
 
   @Test
-  fun `1801 height display without keywords is NOT laptop`() {
+  fun `1537 height display without keywords is NOT laptop`() {
     // Width is fine but height exceeds
-    val device = mockDevice(idString = "Generic", width = 2560, height = 1801)
-    assertFalse("Height 1801 exceeds 1800 threshold", isLaptop(device))
+    val device = mockDevice(idString = "Generic", width = 2048, height = 1537)
+    assertFalse("Height 1537 exceeds 1536 threshold", isLaptop(device))
   }
 
   @Test
