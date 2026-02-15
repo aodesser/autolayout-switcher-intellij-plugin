@@ -17,7 +17,11 @@ repositories {
 dependencies {
   intellijPlatform {
     create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
+    testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
   }
+
+  testImplementation("junit:junit:4.13.2")
+  testImplementation("io.mockk:mockk:1.13.13")
 }
 kotlin {
   // Use locally installed JDK 25 for compilation, but emit JVM 21 bytecode for IntelliJ 2025.1.
