@@ -1,0 +1,21 @@
+<idea-plugin>
+    <id>com.aodesser.intellijlayoutplugin</id>
+    <name>AutoLayout Switcher</name>
+    <vendor email="" url="">aodesser</vendor>
+
+    <description><![CDATA[
+      Automatically triggers IntelliJ actions based on current screen setup (laptop-only, single external, or multiple displays).
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.aodesser.intellijlayoutplugin.runtime.LayoutAutoSwitchStartupActivity"/>
+        <applicationConfigurable
+                id="com.aodesser.intellijlayoutplugin.settings"
+                displayName="AutoLayout Switcher"
+                parentId="tools"
+                instance="com.aodesser.intellijlayoutplugin.settings.LayoutAutoSwitchConfigurable"/>
+        <notificationGroup id="AutoLayout Switcher" displayType="BALLOON"/>
+    </extensions>
+</idea-plugin>
